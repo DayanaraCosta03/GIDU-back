@@ -1,7 +1,9 @@
 import { ConfigService } from '@nestjs/config';
 
-import { AppConfigI } from './app-config.type';
+import { AppConfigI, DatabaseConfig } from './app-config.type';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class AppConfigService implements AppConfigI {
   constructor(private readonly configService: ConfigService) {}
 
@@ -26,10 +28,20 @@ export class AppConfigService implements AppConfigI {
     );
   }
 
+  get PRODUCTION(): boolean {
+    return (
+      this.parseBoolean(this.configService.get<string>('PRODUCTION')) || false
+    );
+  }
+
   // KEYS
 
   get COOKIE_KEY(): string {
     return this.configService.get<string>('COOKIE_KEY') || 'default_cookie_key';
+  }
+
+  get JWT_SECRET(): string {
+    return this.configService.get<string>('JWT_SECRET') || 'default-jwt-secret';
   }
 
   // CORS
@@ -57,6 +69,20 @@ export class AppConfigService implements AppConfigI {
     return methods || [];
   }
 
+  // DATABASE
+
+  get DATABASE_CONFIG(): DatabaseConfig {
+    return {
+      host: this.configService.get<string>('DATABASE_HOST') || 'localhost',
+      port: Number(this.configService.get<number>('DATABASE_PORT')) || 3306,
+      username: this.configService.get<string>('DATABASE_USER') || 'root',
+      password:
+        this.configService.get<string>('DATABASE_PASSWORD') || '*******',
+      database: this.configService.get<string>('DATABASE_NAME') || 'test',
+    };
+  }
+
+  // Parsers
   private parseArrayString(value?: string): Array<string> | undefined {
     if (value) return value.split(',');
   }
