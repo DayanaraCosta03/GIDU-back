@@ -1,9 +1,13 @@
+import { Provider } from '@nestjs/common';
 import path from 'path';
+
 import { AppConfigService } from 'src/config/app-config.service';
 import { DataSource } from 'typeorm';
 
-export const databaseProvider = {
-  provide: 'DATA_SOURCE',
+export const DATA_SOURCE_SYMBOL = Symbol('DATA_SOURCE');
+
+export const databaseProvider: Provider = {
+  provide: DATA_SOURCE_SYMBOL,
   useFactory: async (config: AppConfigService) => {
     const dataSource = new DataSource({
       type: 'mysql',

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { databaseProvider } from './database.provider';
 import { AppConfigService } from 'src/config/app-config.service';
+
+import { databaseProvider } from './database.provider';
 
 @Module({
   providers: [databaseProvider, AppConfigService],
