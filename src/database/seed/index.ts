@@ -1,11 +1,32 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from 'src/app.module';
+import { DataSource } from 'typeorm';
+
 import { runSeed } from './initial.seed';
-import { DATA_SOURCE_SYMBOL } from '../database.provider';
+import { Provider } from '@nestjs/common';
+import { AppConfigService } from 'src/config/app-config.service';
+import path from 'path';
+import { DatabaseModule } from '../database.module';
+
+const databaseProvider = {
+  provide: 'DATA_SOURCE',
+  useFactory: async (config: AppConfigService) => {
+    const dataSource = new DataSource({
+      type: 'mysql',
+      ...config.DATABASE_CONFIG,
+      entities: [path.join(__dirname, '/../**/*.schema.ts')],
+      synchronize: !config.PRODUCTION, // true in development mode
+    });
+
+    return dataSource.initialize();
+  },
+};
 
 async function bootstrap() {
-  const app = await NestFactory.createApplicationContext(AppModule);
-  const dataSource = app.get(DATA_SOURCE_SYMBOL);
+  const app = await NestFactory.createApplicationContext(DatabaseModule);
+  const config = app.get(AppConfigService);
+
+  const dataSource = await databaseProvider.useFactory(config);
 
   await runSeed(dataSource);
   await app.close();

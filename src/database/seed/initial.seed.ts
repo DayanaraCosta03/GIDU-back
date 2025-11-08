@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+
 import { PermissionSchema, RoleSchema, WorkAreaSchema } from '../schemas';
 
 export const runSeed = async (dataSource: DataSource) => {

@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { RoleSchema } from './role.schema';
+import { WorkAreaSchema } from './work-area.schema';
 
 @Entity('user')
 export class UserSchema {
@@ -16,9 +17,12 @@ export class UserSchema {
   @Column({ type: 'text' })
   password: string;
 
-  @Column({ type: 'boolean' })
+  @Column({ type: 'boolean', default: false })
   isSuperAdmin: boolean;
 
   @ManyToOne(() => RoleSchema, { nullable: false })
   role: RoleSchema;
+
+  @ManyToOne(() => WorkAreaSchema, { nullable: true })
+  workArea?: WorkAreaSchema;
 }

@@ -1,10 +1,12 @@
-import { Module } from '@nestjs/common';
-import { AppConfigService } from 'src/config/app-config.service';
+import { Global, Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppConfigModule } from 'src/config/config.module';
 
 import { databaseProvider } from './database.provider';
 
+@Global()
 @Module({
-  providers: [databaseProvider, AppConfigService],
-  exports: [databaseProvider],
+  imports: [AppConfigModule, TypeOrmModule.forRootAsync(databaseProvider)],
+  exports: [TypeOrmModule],
 })
 export class DatabaseModule {}
