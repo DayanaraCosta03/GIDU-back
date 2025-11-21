@@ -1,66 +1,75 @@
 import { DataSource } from 'typeorm';
 
-import { PermissionSchema, RoleSchema, WorkAreaSchema } from '../schemas';
+import {
+  PermissionEntity,
+  RoleEntity,
+  AreaEntity,
+} from '../schemas';
 
 export const runSeed = async (dataSource: DataSource) => {
-  const permissionRepo = dataSource.getRepository(PermissionSchema);
-  const roleRepo = dataSource.getRepository(RoleSchema);
-  const workAreaRepo = dataSource.getRepository(WorkAreaSchema);
+  const permissionRepo = dataSource.getRepository(PermissionEntity);
+  const roleRepo = dataSource.getRepository(RoleEntity);
+  const areaRepo = dataSource.getRepository(AreaEntity);
 
-  // ---- PERMISOS ----
-  const permissions = [
-    'registro',
-    'derivación',
-    'consulta',
-    'generación de reportes',
-  ];
+  // ------------------------
+  // PERMISSIONS
+  // ------------------------
+  const permissions = ['Registrar', 'Derivar', 'Vista', 'Reportes'];
 
-  const permissionEntities: PermissionSchema[] = [];
+  const permissionEntities: PermissionEntity[] = [];
 
   for (const name of permissions) {
-    const existing = await permissionRepo.findOne({ where: { name } });
-    if (!existing) {
-      const p = permissionRepo.create({ name });
-      await permissionRepo.save(p);
-      permissionEntities.push(p);
-    } else {
-      permissionEntities.push(existing);
+    let perm = await permissionRepo.findOne({ where: { name } });
+
+    if (!perm) {
+      perm = permissionRepo.create({ name });
+      await permissionRepo.save(perm);
     }
+
+    permissionEntities.push(perm);
   }
 
-  // ---- ROLES ----
+  // Helper
+  const findPermission = (name: string) =>
+    permissionEntities.find((p) => p.name === name)!;
+
+  // ------------------------
+  // ROLES
+  // ------------------------
   const rolesData = [
     {
-      name: 'Administrador',
-      permissions: permissionEntities,
+      name: 'Admin',
+      permissions: permissionEntities, // ALL permissions
     },
     {
-      name: 'Empleado',
-      permissions: permissionEntities.filter(
-        (p) => p.name !== 'generación de reportes',
-      ),
+      name: 'Operador',
+      permissions: [
+        findPermission('Registrar'),
+        findPermission('Vista'),
+      ],
     },
   ];
 
-  const roleEntities: RoleSchema[] = [];
-  for (const data of rolesData) {
-    let role = await roleRepo.findOne({ where: { name: data.name } });
+  for (const roleData of rolesData) {
+    let role = await roleRepo.findOne({ where: { name: roleData.name } });
+
     if (!role) {
-      role = roleRepo.create(data);
+      role = roleRepo.create(roleData);
       await roleRepo.save(role);
     }
-    roleEntities.push(role);
   }
 
-  // ---- ÁREAS DE TRABAJO ----
-  const workAreas = ['Obras', 'Catastro', 'Defensa Civil'];
+  // ------------------------
+  // WORK AREAS
+  // ------------------------
+  const areas = ['Obras', 'Catastro', 'Defensa Civil'];
 
-  for (const name of workAreas) {
-    const existing = await workAreaRepo.findOne({ where: { name } });
-    if (!existing) {
-      await workAreaRepo.save(workAreaRepo.create({ name }));
+  for (const name of areas) {
+    const exists = await areaRepo.findOne({ where: { name } });
+    if (!exists) {
+      await areaRepo.save(areaRepo.create({ name }));
     }
   }
 
-  console.log('Seed ejecutado correctamente');
+  console.log('Seed executed successfully');
 };

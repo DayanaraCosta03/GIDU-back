@@ -1,10 +1,13 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('work_area')
-export class WorkAreaSchema {
-  @PrimaryGeneratedColumn()
+@Entity('area')
+export class AreaEntity {
+  @PrimaryGeneratedColumn({ name: 'area_id' })
   id: number;
 
   @Column({ unique: true })
   name: string;
+
+  @Column({ nullable: true })
+  chief_name?: string;
 }

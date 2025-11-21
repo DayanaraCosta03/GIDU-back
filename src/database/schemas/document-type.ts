@@ -1,8 +1,8 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('permission')
-export class PermissionEntity {
-  @PrimaryGeneratedColumn({ name: 'permission_id' })
+@Entity('document_type')
+export class DocumentTypeEntity {
+  @PrimaryGeneratedColumn({ name: 'document_type_id' })
   id: number;
 
   @Column({ unique: true })
