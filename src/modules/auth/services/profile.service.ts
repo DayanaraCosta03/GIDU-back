@@ -20,8 +20,8 @@ export class ProfileService {
     return {
       dni: user.dni,
       name: user.name,
-      isSuperAdmin: user.isSuperAdmin,
       role: user.role,
+      email: user.email,
       workArea: user.workArea,
     };
   }

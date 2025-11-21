@@ -3,10 +3,10 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import argon2 from 'argon2';
 import { UserSchema } from 'src/database/schemas';
+import { JwtI } from 'src/types/jwt.type';
 import { Repository } from 'typeorm';
 
 import { LoginDTO } from '../dto/login.dto';
-import { JwtI } from 'src/types/jwt.type';
 
 @Injectable()
 export class LoginService {
@@ -34,8 +34,8 @@ export class LoginService {
       token: token,
       dni: user.dni,
       name: user.name,
-      isSuperAdmin: user.isSuperAdmin,
       role: user.role,
+      email: user.email,
       workArea: user.workArea,
     };
   }

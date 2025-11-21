@@ -9,10 +9,10 @@ import {
 } from 'src/database/schemas';
 
 import { AuthController } from './auth.controller';
-import { LoginService } from './services/login.service';
-import { RegisterService } from './services/register.service';
 import { AuthGuard } from './guard/auth.guard';
+import { LoginService } from './services/login.service';
 import { ProfileService } from './services/profile.service';
+import { RegisterService } from './services/register.service';
 
 @Module({
   imports: [

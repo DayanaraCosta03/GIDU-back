@@ -1,22 +1,18 @@
 import { DataSource } from 'typeorm';
 
-import {
-  PermissionEntity,
-  RoleEntity,
-  AreaEntity,
-} from '../schemas';
+import { PermissionSchema, RoleSchema, WorkAreaSchema } from '../schemas';
 
 export const runSeed = async (dataSource: DataSource) => {
-  const permissionRepo = dataSource.getRepository(PermissionEntity);
-  const roleRepo = dataSource.getRepository(RoleEntity);
-  const areaRepo = dataSource.getRepository(AreaEntity);
+  const permissionRepo = dataSource.getRepository(PermissionSchema);
+  const roleRepo = dataSource.getRepository(RoleSchema);
+  const areaRepo = dataSource.getRepository(WorkAreaSchema);
 
   // ------------------------
   // PERMISSIONS
   // ------------------------
   const permissions = ['Registrar', 'Derivar', 'Vista', 'Reportes'];
 
-  const permissionEntities: PermissionEntity[] = [];
+  const permissionEntities: PermissionSchema[] = [];
 
   for (const name of permissions) {
     let perm = await permissionRepo.findOne({ where: { name } });
@@ -43,10 +39,7 @@ export const runSeed = async (dataSource: DataSource) => {
     },
     {
       name: 'Operador',
-      permissions: [
-        findPermission('Registrar'),
-        findPermission('Vista'),
-      ],
+      permissions: [findPermission('Registrar'), findPermission('Vista')],
     },
   ];
 

@@ -7,14 +7,14 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { FastifyRequest } from 'fastify';
+import { JwtI } from 'src/types/jwt.type';
+
 import { LoginDTO } from './dto/login.dto';
 import { RegisterDTO } from './dto/register.dto';
-import { LoginService } from './services/login.service';
-import { RegisterService } from './services/register.service';
 import { AuthGuard } from './guard/auth.guard';
-import { JwtI } from 'src/types/jwt.type';
+import { LoginService } from './services/login.service';
 import { ProfileService } from './services/profile.service';
+import { RegisterService } from './services/register.service';
 
 @Controller('auth')
 export class AuthController {

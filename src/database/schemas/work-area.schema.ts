@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('area')
-export class AreaEntity {
+export class WorkAreaSchema {
   @PrimaryGeneratedColumn({ name: 'area_id' })
   id: number;
 

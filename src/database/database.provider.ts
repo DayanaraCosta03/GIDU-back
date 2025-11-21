@@ -1,10 +1,10 @@
 import path from 'path';
 
-import { AppConfigService } from 'src/config/app-config.service';
 import {
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
+import { AppConfigService } from 'src/config/app-config.service';
 
 export const databaseProvider: TypeOrmModuleAsyncOptions = {
   inject: [AppConfigService],

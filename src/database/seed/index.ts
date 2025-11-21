@@ -1,11 +1,10 @@
+import path from 'path';
+
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from 'src/app.module';
+import { AppConfigService } from 'src/config/app-config.service';
 import { DataSource } from 'typeorm';
 
 import { runSeed } from './initial.seed';
-import { Provider } from '@nestjs/common';
-import { AppConfigService } from 'src/config/app-config.service';
-import path from 'path';
 import { DatabaseModule } from '../database.module';
 
 const databaseProvider = {

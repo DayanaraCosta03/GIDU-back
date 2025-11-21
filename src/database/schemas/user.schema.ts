@@ -1,8 +1,10 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { RoleEntity } from './role.entity';
+
+import { RoleSchema } from './role.schema';
+import { WorkAreaSchema } from './work-area.schema';
 
 @Entity('user')
-export class UserEntity {
+export class UserSchema {
   @PrimaryGeneratedColumn({ name: 'user_id' })
   id: number;
 
@@ -18,6 +20,9 @@ export class UserEntity {
   @Column({ type: 'text' })
   password: string;
 
-  @ManyToOne(() => RoleEntity, { nullable: false })
-  role: RoleEntity;
+  @ManyToOne(() => RoleSchema, { nullable: false })
+  role: RoleSchema;
+
+  @ManyToOne(() => WorkAreaSchema, { nullable: true })
+  workArea?: WorkAreaSchema;
 }
