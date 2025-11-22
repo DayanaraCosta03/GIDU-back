@@ -12,7 +12,10 @@ export class ProfileService {
   ) {}
 
   async run(payload: JwtI) {
-    const user = await this.userRepo.findOneBy({ dni: payload.dni });
+    const user = await this.userRepo.findOne({
+      where: { dni: payload.dni },
+      relations: ['role'],
+    });
 
     if (!user)
       throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
@@ -20,9 +23,7 @@ export class ProfileService {
     return {
       dni: user.dni,
       name: user.name,
-      role: user.role,
-      email: user.email,
-      workArea: user.workArea,
+      role: user.role.name,
     };
   }
 }

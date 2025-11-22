@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import argon2 from 'argon2';
-import { RoleSchema, UserSchema, WorkAreaSchema } from 'src/database/schemas';
+import { RoleSchema, UserSchema } from 'src/database/schemas';
 import { Repository } from 'typeorm';
 
 import { RegisterDTO } from '../dto/register.dto';
@@ -13,8 +13,6 @@ export class RegisterService {
     private readonly roleRepo: Repository<RoleSchema>,
     @InjectRepository(UserSchema)
     private readonly userRepo: Repository<UserSchema>,
-    @InjectRepository(WorkAreaSchema)
-    private readonly workAreaRepo: Repository<WorkAreaSchema>,
   ) {}
 
   async run(body: RegisterDTO) {
@@ -24,15 +22,7 @@ export class RegisterService {
         HttpStatus.CONFLICT,
       );
 
-    const workArea = await this.workAreaRepo.findOneBy({ name: body.area });
-
-    if (!workArea)
-      throw new HttpException(
-        `El área de trabajo es invalido.`,
-        HttpStatus.BAD_REQUEST,
-      );
-
-    const employeeRole = await this.roleRepo.findOneBy({ name: 'Empleado' });
+    const employeeRole = await this.roleRepo.findOneBy({ name: 'Operador' });
     if (!employeeRole)
       throw new HttpException(
         'Opps! Hubo un error. Intentelo más tarde o contactenos.',
@@ -44,7 +34,6 @@ export class RegisterService {
       name: body.name,
       password: await argon2.hash(body.password),
       role: employeeRole,
-      workArea: workArea,
     });
 
     await this.userRepo.save(newUser);

@@ -17,7 +17,10 @@ export class LoginService {
   ) {}
 
   async run(body: LoginDTO) {
-    const user = await this.userRepo.findOneBy({ dni: body.dni });
+    const user = await this.userRepo.findOne({
+      where: { dni: body.dni },
+      relations: ['role'],
+    });
 
     if (!user)
       throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
@@ -34,9 +37,7 @@ export class LoginService {
       token: token,
       dni: user.dni,
       name: user.name,
-      role: user.role,
-      email: user.email,
-      workArea: user.workArea,
+      role: user.role.name,
     };
   }
 }
